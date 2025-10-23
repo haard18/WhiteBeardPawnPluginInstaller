@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+    
+    <!-- 
+        WhiteBeard Pawn Plugin Installer - Main Product Definition
+        WiX Toolset v4
+    -->
+    
+    <Package Name="WhiteBeard Pawn Plugin" 
+             Manufacturer="WhiteBeard.ai" 
+             Version="1.0.0" 
+             UpgradeCode="DAD7820B-0EFD-495F-A67E-BE39AAE6AB6E"
+             InstallerVersion="500"
+             Compressed="yes"
+             InstallScope="perMachine"
+             Language="1033">
+        
+        <!-- Product Information -->
+        <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
+        <Property Id="ARPHELPLINK" Value="https://whitebeard.ai/support" />
+        <Property Id="ARPURLINFOABOUT" Value="https://whitebeard.ai" />
+        <Property Id="ARPCONTACT" Value="support@whitebeard.ai" />
+        <Property Id="ARPCOMMENTS" Value="WhiteBeard Pawn Plugin for MetaTrader 5" />
+        
+        <!-- Require Administrator privileges -->
+        <Property Id="ALLUSERS" Value="1" />
+        <Property Id="MSIINSTALLPERUSER" Value="" />
+        
+        <!-- Custom Properties for Installation -->
+        <Property Id="LICENSE_FILE_PATH" Value="" />
+        <Property Id="LICENSE_FOUND" Value="0" />
+        <Property Id="LICENSE_VALID" Value="0" />
+        <Property Id="LICENSE_ACCEPTED" Value="0" />
+        <Property Id="COMPANY_NAME" Value="" />
+        <Property Id="COMPANY_EMAIL" Value="" />
+        <Property Id="MT5_INSTALL_PATH" Value="" />
+        <Property Id="MT5_FOUND" Value="0" />
+        <Property Id="MT5_PATH_VALID" Value="0" />
+        
+        <!-- Installation Directory -->
+        <StandardDirectory Id="ProgramFiles64Folder">
+            <Directory Id="INSTALLFOLDER" Name="WhiteBeard">
+                <Directory Id="PLUGINDIR" Name="PawnPlugin" />
+            </Directory>
+        </StandardDirectory>
+        
+        <!-- ProgramData Directory -->
+        <StandardDirectory Id="CommonAppDataFolder">
+            <Directory Id="WHITEBEARDDATADIR" Name="WhiteBeard" />
+        </StandardDirectory>
+        
+        <!-- Components -->
+        <ComponentGroup Id="ProductComponents" Directory="PLUGINDIR">
+            
+            <!-- Main Plugin DLL -->
+            <Component Id="PawnPluginDLL" Guid="B2C3D4E5-F6A7-4B5C-8D9E-0F1A2B3C4D5E">
+                <File Id="PawnPlugin64.dll" Source="Files\PawnPlugin64.dll" KeyPath="yes" />
+            </Component>
+            
+            <!-- License Agreement PDF -->
+            <Component Id="LicenseAgreementPDF" Guid="C3D4E5F6-A7B8-4C5D-8E9F-0A1B2C3D4E5F">
+                <File Id="LicenseAgreement.pdf" Source="Files\LicenseAgreement.pdf" KeyPath="yes" />
+            </Component>
+            
+            <!-- User Guide PDF -->
+            <Component Id="UserGuidePDF" Guid="D4E5F6A7-B8C9-4D5E-8F9A-0B1C2D3E4F5A">
+                <File Id="PawnPlugin_UserGuide.pdf" Source="Files\PawnPlugin_UserGuide.pdf" KeyPath="yes" />
+            </Component>
+            
+            <!-- Registry Entries -->
+            <Component Id="RegistryEntries" Guid="E5F6A7B8-C9D0-4E5F-8A9B-0C1D2E3F4A5B">
+                <RegistryKey Root="HKLM" Key="Software\WhiteBeard\PawnPlugin">
+                    <RegistryValue Type="string" Name="InstallPath" Value="[MT5_INSTALL_PATH]" KeyPath="yes" />
+                    <RegistryValue Type="string" Name="Version" Value="1.0.0" />
+                    <RegistryValue Type="string" Name="CompanyName" Value="[COMPANY_NAME]" />
+                    <RegistryValue Type="string" Name="CompanyEmail" Value="[COMPANY_EMAIL]" />
+                </RegistryKey>
+            </Component>
+            
+        </ComponentGroup>
+        
+        <!-- Features -->
+        <Feature Id="ProductFeature" 
+                 Title="WhiteBeard Pawn Plugin" 
+                 Level="1"
+                 Description="Main plugin and documentation files"
+                 Display="expand"
+                 ConfigurableDirectory="INSTALLFOLDER">
+            <ComponentGroupRef Id="ProductComponents" />
+        </Feature>
+        
+        <!-- Custom Actions -->
+        <Binary Id="CustomActionsDLL" SourceFile="CustomActions\bin\Release\net48\CustomActions.dll" />
+        
+        <!-- Verify License Custom Action -->
+        <CustomAction Id="CA_VerifyLicense"
+                      BinaryRef="CustomActionsDLL"
+                      DllEntry="VerifyLicenseFile"
+                      Execute="immediate"
+                      Return="check" />
+        
+        <!-- Detect MT5 Installation Custom Action -->
+        <CustomAction Id="CA_DetectMT5"
+                      BinaryRef="CustomActionsDLL"
+                      DllEntry="DetectMT5Installation"
+                      Execute="immediate"
+                      Return="check" />
+        
+        <!-- Validate MT5 Path Custom Action -->
+        <CustomAction Id="CA_ValidateMT5Path"
+                      BinaryRef="CustomActionsDLL"
+                      DllEntry="ValidateMT5Path"
+                      Execute="immediate"
+                      Return="check" />
+        
+        <!-- Copy Files Custom Action -->
+        <CustomAction Id="CA_CopyFiles"
+                      BinaryRef="CustomActionsDLL"
+                      DllEntry="CopyPluginFiles"
+                      Execute="deferred"
+                      Impersonate="no"
+                      Return="check" />
+        
+        <!-- Cleanup Custom Action -->
+        <CustomAction Id="CA_Cleanup"
+                      BinaryRef="CustomActionsDLL"
+                      DllEntry="CleanupFiles"
+                      Execute="deferred"
+                      Impersonate="no"
+                      Return="check" />
+        
+        <!-- Install Sequence -->
+        <InstallExecuteSequence>
+            <!-- Detect MT5 early in the sequence -->
+            <Custom Action="CA_DetectMT5" Before="AppSearch">NOT Installed</Custom>
+            
+            <!-- Copy files during installation -->
+            <Custom Action="CA_CopyFiles" After="InstallFiles">NOT Installed</Custom>
+            
+            <!-- Cleanup on uninstall -->
+            <Custom Action="CA_Cleanup" Before="RemoveFiles">REMOVE="ALL"</Custom>
+        </InstallExecuteSequence>
+        
+        <!-- UI Sequence -->
+        <InstallUISequence>
+            <Custom Action="CA_DetectMT5" Before="AppSearch">NOT Installed</Custom>
+        </InstallUISequence>
+        
+        <!-- User Interface -->
+        <UI Id="WixUI_Custom">
+            
+            <!-- Include standard WiX UI dialogs -->
+            <DialogRef Id="ErrorDlg" />
+            <DialogRef Id="FatalError" />
+            <DialogRef Id="FilesInUse" />
+            <DialogRef Id="MsiRmFilesInUse" />
+            <DialogRef Id="PrepareDlg" />
+            <DialogRef Id="ProgressDlg" />
+            <DialogRef Id="ResumeDlg" />
+            <DialogRef Id="UserExit" />
+            <DialogRef Id="WelcomeDlg" />
+            <DialogRef Id="MaintenanceTypeDlg" />
+            <DialogRef Id="MaintenanceWelcomeDlg" />
+            
+            <!-- Custom Dialogs -->
+            <DialogRef Id="LicenseVerificationDlg" />
+            <DialogRef Id="LicenseAgreementDlg" />
+            <DialogRef Id="MT5PathDlg" />
+            
+            <!-- Dialog Sequence -->
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseVerificationDlg">NOT Installed</Publish>
+            <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">Installed</Publish>
+            
+            <!-- Progress Dialog -->
+            <Publish Dialog="ProgressDlg" Control="Cancel" Event="SpawnDialog" Value="CancelDlg">1</Publish>
+            
+        </UI>
+        
+        <!-- UI Properties -->
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+        
+        <!-- Include Custom UI Fragments -->
+        <UIRef Id="VerifyLicenseDialog" />
+        <UIRef Id="LicenseAgreementDialog" />
+        <UIRef Id="MT5PathDialog" />
+        
+        <!-- Media -->
+        <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+        
+        <!-- Icon -->
+        <Icon Id="ProductIcon" SourceFile="icon.ico" />
+        
+        <!-- Upgrade Logic -->
+        <Upgrade Id="A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D">
+            <UpgradeVersion OnlyDetect="no" 
+                          Property="PREVIOUSFOUND"
+                          Minimum="1.0.0" 
+                          IncludeMinimum="yes"
+                          Maximum="1.0.0" 
+                          IncludeMaximum="no" />
+        </Upgrade>
+        
+        <InstallExecuteSequence>
+            <RemoveExistingProducts After="InstallInitialize" />
+        </InstallExecuteSequence>
+        
+    </Package>
+    
+</Wix>

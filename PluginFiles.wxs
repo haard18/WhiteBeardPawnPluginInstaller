@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    
+    <!-- 
+        Auto-generated file component definitions
+        This file should be regenerated using heat.exe when Files/ directory changes
+        Command: heat dir "Files" -cg PluginFiles -dr INSTALLFOLDER -srd -var var.SourceDir -out PluginFiles.wxs
+    -->
+    
+    <Fragment>
+        <ComponentGroup Id="PluginFiles" Directory="PLUGINDIR">
+            
+            <!-- This is a placeholder file -->
+            <!-- Run heat.exe to auto-generate component definitions from Files/ directory -->
+            <!-- Example components are defined in Product.wxs instead -->
+            
+        </ComponentGroup>
+    </Fragment>
+    
+</Wix>

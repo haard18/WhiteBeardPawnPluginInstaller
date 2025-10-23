@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+    
+    <Fragment>
+        <!-- License Verification Dialog -->
+        <UI Id="VerifyLicenseDialog">
+            <Dialog Id="LicenseVerificationDlg" Width="370" Height="270" Title="[ProductName] - License Verification">
+                
+                <!-- Banner -->
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                
+                <!-- Title -->
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="340" Height="15" Transparent="yes" NoPrefix="yes">
+                    <Text>{\WixUI_Font_Title}License Verification</Text>
+                </Control>
+                
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="340" Height="15" Transparent="yes" NoPrefix="yes">
+                    <Text>Please provide your WhiteBeard Pawn Plugin license file</Text>
+                </Control>
+                
+                <!-- License File Path Section -->
+                <Control Id="LicensePathLabel" Type="Text" X="20" Y="60" Width="340" Height="15" NoPrefix="yes">
+                    <Text>License File Location:</Text>
+                </Control>
+                
+                <Control Id="LicensePathEdit" Type="Edit" X="20" Y="75" Width="280" Height="18" 
+                         Property="LICENSE_FILE_PATH" />
+                
+                <Control Id="BrowseLicenseBtn" Type="PushButton" X="305" Y="75" Width="56" Height="18" Text="Browse...">
+                    <Publish Event="SpawnDialog" Value="BrowseLicenseDlg">1</Publish>
+                </Control>
+                
+                <!-- Verification Status -->
+                <Control Id="VerificationStatus" Type="Text" X="20" Y="100" Width="330" Height="40" NoPrefix="yes">
+                    <Text>Click "Verify" to validate your license file.</Text>
+                </Control>
+                
+                <!-- Company Information Display -->
+                <Control Id="CompanyInfoLabel" Type="Text" X="20" Y="150" Width="330" Height="15" NoPrefix="yes">
+                    <Text>Licensed To:</Text>
+                </Control>
+                
+                <Control Id="CompanyNameLabel" Type="Text" X="30" Y="170" Width="80" Height="15" NoPrefix="yes">
+                    <Text>Company:</Text>
+                </Control>
+                
+                <Control Id="CompanyNameValue" Type="Text" X="110" Y="170" Width="240" Height="15" NoPrefix="yes">
+                    <Text>[COMPANY_NAME]</Text>
+                </Control>
+                
+                <Control Id="CompanyEmailLabel" Type="Text" X="30" Y="185" Width="80" Height="15" NoPrefix="yes">
+                    <Text>Email:</Text>
+                </Control>
+                
+                <Control Id="CompanyEmailValue" Type="Text" X="110" Y="185" Width="240" Height="15" NoPrefix="yes">
+                    <Text>[COMPANY_EMAIL]</Text>
+                </Control>
+                
+                <!-- Bottom Line -->
+                <Control Id="BottomLine" Type="Line" X="0" Y="226" Width="370" Height="0" />
+                
+                <!-- Navigation Buttons -->
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="&amp;Back">
+                    <Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
+                </Control>
+                
+                <Control Id="Verify" Type="PushButton" X="236" Y="243" Width="56" Height="17" Text="&amp;Verify" Default="yes">
+                    <Publish Event="DoAction" Value="CA_VerifyLicense">1</Publish>
+                </Control>
+                
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Text="&amp;Next" Default="yes">
+                    <Publish Event="NewDialog" Value="LicenseAgreementDlg">LICENSE_VALID = "1"</Publish>
+                </Control>
+                
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                
+            </Dialog>
+        </UI>
+        
+        <!-- Browse for License File Dialog -->
+        <UI Id="BrowseLicenseDialog">
+            <Dialog Id="BrowseLicenseDlg" Width="370" Height="270" Title="[ProductName] - Browse for License">
+                
+                <Control Id="PathEdit" Type="PathEdit" X="25" Y="100" Width="320" Height="18" 
+                         Property="LICENSE_FILE_PATH" />
+                
+                <Control Id="OK" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="OK">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                
+            </Dialog>
+        </UI>
+        
+    </Fragment>
+    
+</Wix>

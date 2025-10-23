@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>3.11</ProductVersion>
+    <ProjectGuid>{6B29B3F4-9F4A-4C4A-8F3E-5B4C7F8D9E0F}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>WhiteBeardPawnPlugin</OutputName>
+    <OutputType>Package</OutputType>
+    <Name>WhiteBeardPawnPlugin</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+    <Compile Include="PluginFiles.wxs" />
+    <Compile Include="UI\VerifyLicenseDialog.wxs" />
+    <Compile Include="UI\TermsDialog.wxs" />
+    <Compile Include="UI\MT5PathDialog.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\PawnPlugin64.dll" />
+    <Content Include="Files\LicenseAgreement.pdf" />
+    <Content Include="Files\PawnPlugin_UserGuide.pdf" />
+    <Content Include="Files\example_pawn_plugin.lic" />
+    <Content Include="icon.ico" />
+    <Content Include="PublicKey.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="CustomActions\CustomActions.csproj">
+      <Name>CustomActions</Name>
+      <Project>{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v4.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v4.x\Wix.targets') " />
+  <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
+    <Error Text="The WiX Toolset v4.0 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see https://wixtoolset.org/" />
+  </Target>
+</Project>

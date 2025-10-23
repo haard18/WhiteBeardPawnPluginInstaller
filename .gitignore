@@ -1,0 +1,108 @@
+# WhiteBeard Pawn Plugin Installer - .gitignore
+
+# Build outputs
+bin/
+obj/
+*.msi
+*.wixpdb
+*.wixobj
+*.cab
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# .NET
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/launchSettings.json
+LicenseGenerator
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Logs
+*.log
+install.log
+uninstall.log
+
+# Windows Installer files from build
+*.msm
+*.msp
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Custom Actions compiled DLL (except in release builds)
+CustomActions/bin/Debug/
+CustomActions/obj/
+
+# CRITICAL: Never commit private keys!
+LicenseGenerator/PrivateKey.xml
+PrivateKey.xml
+
+# Keep placeholder files but ignore actual sensitive files
+# Uncomment the following lines when you add real files:
+# Files/PawnPlugin64.dll
+# Files/LicenseAgreement.pdf
+# Files/PawnPlugin_UserGuide.pdf
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
