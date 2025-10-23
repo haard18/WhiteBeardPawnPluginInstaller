@@ -18,8 +18,19 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-echo [1/5] Building Custom Actions...
+echo [1/5] Restoring NuGet packages...
 cd CustomActions
+dotnet restore
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Failed to restore NuGet packages
+    cd ..
+    pause
+    exit /b 1
+)
+echo NuGet packages restored successfully.
+echo.
+
+echo [2/5] Building Custom Actions...
 dotnet build -c Release
 if %ERRORLEVEL% NEQ 0 (
     echo ERROR: Failed to build CustomActions
@@ -31,13 +42,13 @@ cd ..
 echo Custom Actions built successfully.
 echo.
 
-echo [2/5] Generating file component definitions with heat...
+echo [3/5] Generating file component definitions with heat...
 REM Uncomment the following line if you want to auto-generate PluginFiles.wxs
 REM wix heat dir "Files" -cg PluginFiles -dr PLUGINDIR -srd -var var.SourceDir -out PluginFiles.wxs
 echo Skipping heat generation (using manual component definitions in Product.wxs)
 echo.
 
-echo [3/5] Compiling WiX source files...
+echo [4/5] Compiling WiX source files...
 wix build Product.wxs UI\VerifyLicenseDialog.wxs UI\TermsDialog.wxs UI\MT5PathDialog.wxs ^
     -ext WixToolset.Util.wixext ^
     -ext WixToolset.UI.wixext ^
@@ -50,7 +61,7 @@ if %ERRORLEVEL% NEQ 0 (
 echo WiX source files compiled successfully.
 echo.
 
-echo [4/5] Validating MSI package...
+echo [5/5] Validating MSI package...
 if exist WhiteBeardPawnPlugin.msi (
     echo MSI package created successfully!
     dir WhiteBeardPawnPlugin.msi
@@ -61,7 +72,7 @@ if exist WhiteBeardPawnPlugin.msi (
 )
 echo.
 
-echo [5/5] Build complete!
+echo [6/6] Build complete!
 echo ========================================
 echo Output: WhiteBeardPawnPlugin.msi
 echo ========================================
