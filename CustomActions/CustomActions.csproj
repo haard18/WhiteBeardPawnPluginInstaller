@@ -6,10 +6,13 @@
     <AssemblyName>CustomActions</AssemblyName>
     <OutputType>Library</OutputType>
     <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WixToolset.Dtf.WindowsInstaller" Version="4.0.5" />
+    <PackageReference Include="WixToolset.Dtf.WindowsInstaller" Version="4.0.5">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

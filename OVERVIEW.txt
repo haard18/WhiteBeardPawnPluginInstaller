@@ -1,0 +1,162 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  WHITEBEARD PAWN PLUGIN INSTALLER                           ║
+║                    License Management Overview                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 QUICK ANSWER: How do I manage licenses?
+═══════════════════════════════════════════════════════════════════════════════
+
+YES! You generate licenses on your Mac and:
+  ✉️  Send LICENSE FILE (.lic) to customer
+  📦 Include PUBLIC KEY (PublicKey.xml) in installer
+  🔒 NEVER share PRIVATE KEY (PrivateKey.xml) - keep it SECRET!
+
+
+🔐 THE KEY SYSTEM
+═══════════════════════════════════════════════════════════════════════════════
+
+  ┌─────────────────────┐
+  │   PrivateKey.xml    │  ← YOU KEEP THIS SECRET
+  │   (Your Mac only)   │     Used to SIGN licenses
+  └─────────────────────┘
+           │
+           │ generates signatures
+           ↓
+  ┌─────────────────────┐
+  │  customer.lic file  │  ← SEND TO CUSTOMER
+  │ (signed license)    │     Contains: data + signature
+  └─────────────────────┘
+           │
+           │ customer installs
+           ↓
+  ┌─────────────────────┐
+  │   PublicKey.xml     │  ← IN INSTALLER
+  │   (embedded)        │     Used to VERIFY signatures
+  └─────────────────────┘
+
+
+🚀 3-STEP WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 1: Generate Keys (ONE TIME)
+─────────────────────────────────
+  $ cd LicenseGenerator && dotnet run
+  # Select: 1. Generate RSA Key Pair
+  
+  ✓ Creates PrivateKey.xml (KEEP SECRET!)
+  ✓ Creates PublicKey.xml (include in installer)
+
+
+STEP 2: Create Customer License (PER CUSTOMER)
+───────────────────────────────────────────────
+  $ cd LicenseGenerator && dotnet run
+  # Select: 2. Create License File
+  # Enter customer details
+  
+  ✓ Creates Files/Customer_pawn_plugin.lic
+  ✉️ Email this .lic file to customer
+
+
+STEP 3: Build Installer (ONCE - on Windows)
+────────────────────────────────────────────
+  > build.bat
+  
+  ✓ Creates WhiteBeardPawnPlugin.msi
+  📤 Upload to website for customers to download
+
+
+📧 CUSTOMER INSTRUCTIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+Send customers these steps:
+
+  1. Create folder: C:\ProgramData\WhiteBeard\
+  2. Place your .lic file in that folder
+  3. Download installer from website
+  4. Run WhiteBeardPawnPlugin.msi
+  5. Installer automatically verifies license
+  6. Complete installation
+
+
+🔒 SECURITY: Can customers fake licenses?
+═══════════════════════════════════════════════════════════════════════════════
+
+NO! Here's why:
+
+  ❌ Customers have PublicKey.xml (in installer)
+     BUT: Public key can only VERIFY, not CREATE signatures
+  
+  ❌ Customers can edit .lic file
+     BUT: Changes invalidate the signature → installation fails
+  
+  ✅ Only YOU can create valid licenses
+     BECAUSE: Only you have PrivateKey.xml
+
+
+📁 FILE LOCATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+Your Mac:
+  ├── LicenseGenerator/
+  │   ├── PrivateKey.xml              🔒 KEEP SECRET! Git ignored
+  │   └── (license generator tool)
+  ├── PublicKey.xml                   ✅ Include in installer
+  └── Files/
+      └── Customer_pawn_plugin.lic    ✉️ Send to customer
+
+Windows VPS:
+  ├── PublicKey.xml                   ✅ Embedded in installer
+  └── WhiteBeardPawnPlugin.msi        📤 Distribute to customers
+
+Customer's PC:
+  ├── C:\ProgramData\WhiteBeard\
+  │   └── Customer_pawn_plugin.lic    (customer places here)
+  └── C:\Program Files\MetaTrader 5\
+      └── Plugins\
+          └── PawnPlugin64.dll        (installer copies here)
+
+
+🎯 QUICK COMMANDS
+═══════════════════════════════════════════════════════════════════════════════
+
+Generate keys (first time):
+  $ cd LicenseGenerator && dotnet run
+  → Select option 1
+
+Create license (per customer):
+  $ cd LicenseGenerator && dotnet run
+  → Select option 2
+
+Or use helper script:
+  $ ./generate_license.sh
+
+Build installer (Windows):
+  > build.bat
+
+Test installation (Windows):
+  > msiexec /i WhiteBeardPawnPlugin.msi /l*v install.log
+
+
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+  QUICKSTART.md          → Start here! Quick reference
+  HOW_IT_WORKS.md        → Complete explanation with diagrams
+  LICENSE_MANAGEMENT.md  → Detailed workflow guide
+  BUILD.md               → Build instructions
+  README.md              → Project overview
+
+
+✅ YOU'RE READY!
+═══════════════════════════════════════════════════════════════════════════════
+
+Next steps:
+  1. Run: cd LicenseGenerator && dotnet run
+  2. Select: Generate RSA Key Pair
+  3. Backup PrivateKey.xml securely
+  4. Done! You can now generate customer licenses anytime
+
+
+Need help? Read QUICKSTART.md or HOW_IT_WORKS.md
+
+═══════════════════════════════════════════════════════════════════════════════
